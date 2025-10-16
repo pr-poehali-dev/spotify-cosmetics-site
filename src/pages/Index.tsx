@@ -8,9 +8,16 @@ import { Badge } from '@/components/ui/badge';
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [selectedCategory, setSelectedCategory] = useState('Все');
+  const [scrollY, setScrollY] = useState(0);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
     observerRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -25,7 +32,10 @@ const Index = () => {
     const elements = document.querySelectorAll('.animate-on-scroll');
     elements.forEach((el) => observerRef.current?.observe(el));
 
-    return () => observerRef.current?.disconnect();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      observerRef.current?.disconnect();
+    };
   }, [selectedCategory]);
 
   const scrollToSection = (id: string) => {
@@ -203,11 +213,33 @@ const Index = () => {
                 </Button>
               </div>
             </div>
-            <div className="flex-1">
-              <img
-                src="https://cdn.poehali.dev/projects/7b059d7c-e0dc-4a6b-8b88-bbbd16ab4e47/files/ed822405-24fb-4bd8-b1ec-e70149473da5.jpg"
-                alt="Hero product"
-                className="w-full max-w-md mx-auto rounded-[2rem] shadow-2xl hover-scale"
+            <div className="flex-1 relative">
+              <div 
+                className="relative"
+                style={{
+                  transform: `translateY(${scrollY * 0.15}px)`,
+                  transition: 'transform 0.1s ease-out'
+                }}
+              >
+                <img
+                  src="https://cdn.poehali.dev/projects/7b059d7c-e0dc-4a6b-8b88-bbbd16ab4e47/files/ed822405-24fb-4bd8-b1ec-e70149473da5.jpg"
+                  alt="Hero product"
+                  className="w-full max-w-md mx-auto rounded-[2rem] shadow-2xl hover-scale"
+                />
+              </div>
+              <div 
+                className="absolute top-10 -left-10 w-32 h-32 bg-gray-200 rounded-[2rem] -z-10 opacity-50"
+                style={{
+                  transform: `translateY(${scrollY * 0.25}px)`,
+                  transition: 'transform 0.1s ease-out'
+                }}
+              />
+              <div 
+                className="absolute bottom-10 -right-10 w-40 h-40 bg-gray-300 rounded-[2rem] -z-10 opacity-30"
+                style={{
+                  transform: `translateY(${scrollY * 0.08}px)`,
+                  transition: 'transform 0.1s ease-out'
+                }}
               />
             </div>
           </div>
@@ -303,12 +335,19 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            <div>
-              <img
-                src="https://cdn.poehali.dev/projects/7b059d7c-e0dc-4a6b-8b88-bbbd16ab4e47/files/50ade618-584c-4504-8c2c-b13aeb09a384.jpg"
-                alt="About us"
-                className="w-full rounded-[2rem] shadow-2xl hover-scale"
-              />
+            <div className="relative">
+              <div
+                style={{
+                  transform: `translateY(${scrollY * 0.05}px)`,
+                  transition: 'transform 0.1s ease-out'
+                }}
+              >
+                <img
+                  src="https://cdn.poehali.dev/projects/7b059d7c-e0dc-4a6b-8b88-bbbd16ab4e47/files/50ade618-584c-4504-8c2c-b13aeb09a384.jpg"
+                  alt="About us"
+                  className="w-full rounded-[2rem] shadow-2xl hover-scale"
+                />
+              </div>
             </div>
           </div>
         </div>
