@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
+  const [selectedCategory, setSelectedCategory] = useState('Все');
 
   const scrollToSection = (id: string) => {
     setActiveSection(id);
@@ -46,8 +47,30 @@ const Index = () => {
       price: '1 990 ₽',
       image: 'https://cdn.poehali.dev/projects/7b059d7c-e0dc-4a6b-8b88-bbbd16ab4e47/files/ed822405-24fb-4bd8-b1ec-e70149473da5.jpg',
       ingredients: ['Салициловая кислота', 'Пантенол', 'Экстракт ромашки']
+    },
+    {
+      id: 5,
+      name: 'Bright Toner',
+      category: 'Тонер',
+      price: '2 290 ₽',
+      image: 'https://cdn.poehali.dev/projects/7b059d7c-e0dc-4a6b-8b88-bbbd16ab4e47/files/50ade618-584c-4504-8c2c-b13aeb09a384.jpg',
+      ingredients: ['Экстракт центеллы', 'Ниацинамид', 'Гиалуроновая кислота']
+    },
+    {
+      id: 6,
+      name: 'Deep Mask',
+      category: 'Маска',
+      price: '1 790 ₽',
+      image: 'https://cdn.poehali.dev/projects/7b059d7c-e0dc-4a6b-8b88-bbbd16ab4e47/files/4f8dca3b-2906-4093-bb0f-252b1eabd488.jpg',
+      ingredients: ['Глина', 'Древесный уголь', 'Масло чайного дерева']
     }
   ];
+
+  const categories = ['Все', 'Сыворотка', 'Крем', 'Эссенция', 'Очищение', 'Тонер', 'Маска'];
+  
+  const filteredProducts = selectedCategory === 'Все' 
+    ? products 
+    : products.filter(p => p.category === selectedCategory);
 
   const ingredients = [
     { icon: 'Droplet', name: 'Гиалуроновая кислота', benefit: 'Интенсивное увлажнение' },
@@ -178,8 +201,26 @@ const Index = () => {
             <h2 className="text-4xl font-bold mb-4">Каталог продуктов</h2>
             <p className="text-muted-foreground text-lg">Подобрано специально для вашей кожи</p>
           </div>
+          
+          <div className="flex flex-wrap gap-3 mb-8">
+            {categories.map((category) => (
+              <Button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                variant={selectedCategory === category ? 'default' : 'outline'}
+                className={`rounded-full font-semibold transition-all ${
+                  selectedCategory === category 
+                    ? 'bg-primary text-white hover:bg-primary/90' 
+                    : 'border-2 border-gray-300 hover:border-primary hover:text-primary'
+                }`}
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <Card key={product.id} className="group overflow-hidden border-2 hover:border-primary transition-all duration-300 hover-scale">
                 <div className="aspect-square overflow-hidden bg-gray-100">
                   <img
