@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
@@ -8,6 +8,25 @@ import { Badge } from '@/components/ui/badge';
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [selectedCategory, setSelectedCategory] = useState('Все');
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('fade-in-up');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const elements = document.querySelectorAll('.animate-on-scroll');
+    elements.forEach((el) => observerRef.current?.observe(el));
+
+    return () => observerRef.current?.disconnect();
+  }, [selectedCategory]);
 
   const scrollToSection = (id: string) => {
     setActiveSection(id);
@@ -220,8 +239,12 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredProducts.map((product) => (
-              <Card key={product.id} className="group overflow-hidden border-2 hover:border-primary transition-all duration-300 hover-scale">
+            {filteredProducts.map((product, idx) => (
+              <Card 
+                key={product.id} 
+                className="animate-on-scroll group overflow-hidden border-2 hover:border-primary transition-all duration-300 hover-scale"
+                style={{ animationDelay: `${idx * 0.1}s` }}
+              >
                 <div className="aspect-square overflow-hidden bg-gray-100">
                   <img
                     src={product.image}
@@ -299,7 +322,11 @@ const Index = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {ingredients.map((ingredient, idx) => (
-              <Card key={idx} className="p-8 text-center hover:shadow-lg transition-all hover-scale border-2 hover:border-primary">
+              <Card 
+                key={idx} 
+                className="animate-on-scroll p-8 text-center hover:shadow-lg transition-all hover-scale border-2 hover:border-primary"
+                style={{ animationDelay: `${idx * 0.15}s` }}
+              >
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
                   <Icon name={ingredient.icon as any} size={32} className="text-primary" />
                 </div>
@@ -319,7 +346,11 @@ const Index = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {routines.map((routine, idx) => (
-              <Card key={idx} className="p-8 hover:shadow-xl transition-all hover-scale border-2 hover:border-primary">
+              <Card 
+                key={idx} 
+                className="animate-on-scroll p-8 hover:shadow-xl transition-all hover-scale border-2 hover:border-primary"
+                style={{ animationDelay: `${idx * 0.2}s` }}
+              >
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                     <Icon name={routine.icon as any} size={24} className="text-primary" />
@@ -350,7 +381,11 @@ const Index = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {reviews.map((review, idx) => (
-              <Card key={idx} className="p-6 hover:shadow-lg transition-all hover-scale">
+              <Card 
+                key={idx} 
+                className="animate-on-scroll p-6 hover:shadow-lg transition-all hover-scale"
+                style={{ animationDelay: `${idx * 0.15}s` }}
+              >
                 <div className="flex items-center gap-1 mb-4">
                   {[...Array(review.rating)].map((_, i) => (
                     <Icon key={i} name="Star" size={18} className="text-yellow-400 fill-yellow-400" />
